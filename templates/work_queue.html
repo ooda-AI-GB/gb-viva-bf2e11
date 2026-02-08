@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Unit</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Urgency</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in requests %}
+        <tr>
+            <td>#{{ req.id }}</td>
+            <td>{{ req.unit_number }}</td>
+            <td>{{ req.category }}</td>
+            <td>{{ req.description }}</td>
+            <td class="urgency-{{ req.urgency|lower }}">{{ req.urgency }}</td>
+            <td><span class="badge status-{{ req.status|lower|replace(' ', '-') }}">{{ req.status }}</span></td>
+            <td>
+                <form action="/worker/update/{{ req.id }}" method="post" style="display:inline;">
+                    {% if req.status == 'Pending' %}
+                    <input type="hidden" name="status" value="In Progress">
+                    <button type="submit" class="btn" style="padding: 5px 10px; font-size: 0.8rem; background-color: #fd7e14;">Start</button>
+                    {% elif req.status == 'In Progress' %}
+                    <input type="hidden" name="status" value="Completed">
+                    <button type="submit" class="btn" style="padding: 5px 10px; font-size: 0.8rem; background-color: #28a745;">Complete</button>
+                    {% else %}
+                    <span style="color: #28a745;"><i class="fas fa-check"></i> Done</span>
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7" style="text-align: center;">No assigned requests.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

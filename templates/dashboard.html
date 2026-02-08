@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card">
+        <h3>Open Requests</h3>
+        <div class="number">{{ open_requests }}</div>
+    </div>
+    <div class="card">
+        <h3>Avg Resolution Time (hrs)</h3>
+        <div class="number">{{ avg_resolution_time }}</div>
+    </div>
+    <div class="card">
+        <h3>Emergency Requests</h3>
+        <div class="number urgency-emergency">{{ emergency_count }}</div>
+    </div>
+    <div class="card">
+        <h3>Total Completed</h3>
+        <div class="number">{{ completed_count }}</div>
+    </div>
+</div>
+
+<h2>Recent Requests</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Unit</th>
+            <th>Category</th>
+            <th>Urgency</th>
+            <th>Status</th>
+            <th>Worker</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in recent_requests %}
+        <tr>
+            <td>#{{ req.id }}</td>
+            <td>{{ req.unit_number }}</td>
+            <td>{{ req.category }}</td>
+            <td class="urgency-{{ req.urgency|lower }}">{{ req.urgency }}</td>
+            <td><span class="badge status-{{ req.status|lower|replace(' ', '-') }}">{{ req.status }}</span></td>
+            <td>{{ req.worker.username if req.worker else 'Unassigned' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
